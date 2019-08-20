@@ -21,11 +21,11 @@ class Blockchain {
 
         // compare hash of previouse block to current block lasthash to make sure they are the same
         for (let i = 1; i < chain.length; i++) {
-            const { timestamp, hash, lastHash, data } = chain[i];
+            const { timestamp, hash, lastHash, data, nonce, difficulty } = chain[i];
             const prevBlockHash = chain[i - 1].hash;
             
             // duplica hash from block data of each block
-            const duplicateHash = cryptoHash(timestamp, lastHash, data)
+            const duplicateHash = cryptoHash(timestamp, lastHash, data, nonce, difficulty)
 
             // each blocks last hash field matches last blocks hash field
             if ( prevBlockHash !== lastHash ) return false 
