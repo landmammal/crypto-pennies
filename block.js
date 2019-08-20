@@ -3,12 +3,14 @@ const cryptoHash = require('./cryptohash')
 
 class Block {
     // when passing parameters as an object order wont matter
-    constructor({ timestamp, lastHash, hash, data }){
+    constructor({ timestamp, lastHash, hash, data, nonce, difficulty }){
     //     // this refrences the current instances been created
         this.timestamp = timestamp;
         this.lastHash = lastHash;
         this.hash = hash;
         this.data = data;
+        this.nonce = nonce;
+        this.difficulty = difficulty;
     }
 
     // factory method methods that return an instance without calling the constructor
@@ -19,9 +21,20 @@ class Block {
 
     // mining new blocks method from last block and new data to add to block
     static mineBlock({ lastBlock, data }){ 
-        const minedBlock = new this({timestamp: Date.now() ,lastHash: lastBlock.hash, data });
-        minedBlock.hash = cryptoHash(minedBlock.timestamp, minedBlock.lastHash, data)
-        return minedBlock
+        let hash, timestamp;
+        const lastHash = lastBlock.hash
+        const { difficulty } = lastBlock;
+        let nonce = 0;
+
+        // regenerate hash by changing nonce value 
+        // continue until hash generated meets difficulty criteria
+        do {
+            nonce++ ; 
+            timestamp = Date.now();
+            hash = cryptoHash( timestamp, lastHash, data, nonce, difficulty );
+        } while(hash.substring(0, difficulty) !== '0'.repeat(difficulty))
+
+        return new this({ timestamp, lastHash, data, nonce, difficulty, hash });
     }
 }
 
