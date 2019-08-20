@@ -61,7 +61,7 @@ describe('Blockchain', () => {
                 });
             });
 
-            describe('and the chain down not contain any invalid blocks', () => {
+            describe('and the chain does not contain any invalid blocks', () => {
                 it('return true', () => {
                     expect(Blockchain.isValidChain(blockchain.chain)).toBe(true);
                 });
@@ -125,7 +125,7 @@ describe('Blockchain', () => {
                     blockchain.replaceChain(newChain.chain);
                 });
 
-                it('it reaplces the chain', () => {
+                it('replaces the chain', () => {
                     expect(blockchain.chain).toEqual(newChain.chain);
                 });
 
