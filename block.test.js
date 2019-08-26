@@ -1,12 +1,12 @@
 const Block = require('./block');
-const { GENESIS_DATA } = require('./config')
+const { GENESIS_DATA, MINE_RATE } = require('./config')
 const cryptoHash = require('./cryptohash')
 
 // describe from jest libary
 // first argument is the name of what we are testing,
 // second is a function that the class can run
 describe('Block', () => {
-    const timestamp = 'a-data';
+    const timestamp = 2000;
     const hash = 'a-data';
     const lastHash = 'a-lastHash';
     const data = ['blockchain', 'data'];
@@ -42,7 +42,7 @@ describe('Block', () => {
         it('returns the genesis data', () => {
             expect(genesisBlock).toEqual(GENESIS_DATA);
         });
-    })
+    });
 
     // testing the method that will mine new blocks added to blockchain
     describe('mineBlock', () => {
@@ -83,5 +83,20 @@ describe('Block', () => {
             expect(minedBlock.hash.substring(0, minedBlock.difficulty))
                 .toEqual('0'.repeat(minedBlock.difficulty));
         });
-    })
-})
+    });
+
+    describe('adjustDifficulty()', () => {
+        it('raises the difficulty for a quickly mined block', () => {
+            expect(Block.adjustDifficulty({ 
+                originalBlock: block, timestamp: block.timestamp + MINE_RATE + 100 
+            })).toEqual(block.difficulty+1);
+        });
+
+        it('lowers the difficulty for a slowly mined block', () => {
+            expect(Block.adjustDifficulty({ 
+                originalBlock: block, timestamp: block.timestamp + MINE_RATE - 100 
+            })).toEqual(block.difficulty-1);
+        });
+    });
+
+});
