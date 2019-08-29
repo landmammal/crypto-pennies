@@ -21,16 +21,17 @@ class Block {
 
     // mining new blocks method from last block and new data to add to block
     static mineBlock({ lastBlock, data }){ 
-        let hash, timestamp;
         const lastHash = lastBlock.hash
-        const { difficulty } = lastBlock;
+        let hash, timestamp;
+        let { difficulty } = lastBlock;
         let nonce = 0;
-
+        
         // regenerate hash by changing nonce value 
-        // continue until hash generated meets difficulty criteria
+        // continue until hash generated meets difficulty criteria (number of zeros it starts with)
         do {
             nonce++ ; 
             timestamp = Date.now();
+            difficulty = this.adjustDifficulty({ originalBlock: lastBlock, timestamp });
             hash = cryptoHash( timestamp, lastHash, data, nonce, difficulty );
         } while(hash.substring(0, difficulty) !== '0'.repeat(difficulty))
 
