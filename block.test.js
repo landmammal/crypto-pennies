@@ -45,7 +45,7 @@ describe('Block', () => {
     });
 
     // testing the method that will mine new blocks added to blockchain
-    describe('mineBlock', () => {
+    describe('mineBlock()', () => {
         const lastBlock = Block.genesisBlock();
         const data = 'mined data';
         const minedBlock = Block.mineBlock({ lastBlock, data });
@@ -82,6 +82,13 @@ describe('Block', () => {
         it('sets a `hash` that matches the difficulty criteria', () => {
             expect(minedBlock.hash.substring(0, minedBlock.difficulty))
                 .toEqual('0'.repeat(minedBlock.difficulty));
+        });
+
+        it('adjusts the difficulty', () => {
+            // two possabilities: raised or lower
+            const possibleResults = [lastBlock.difficulty+1, lastBlock.difficulty-1];
+
+            expect(possibleResults.includes(minedBlock.difficulty)).toBe(true);
         });
     });
 
