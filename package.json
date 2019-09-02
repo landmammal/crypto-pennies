@@ -11,5 +11,8 @@
   "license": "MIT",
   "devDependencies": {
     "jest": "^24.8.0"
+  },
+  "dependencies": {
+    "hex-to-binary": "^1.0.1"
   }
 }
