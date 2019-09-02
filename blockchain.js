@@ -23,6 +23,7 @@ class Blockchain {
         for (let i = 1; i < chain.length; i++) {
             const { timestamp, hash, lastHash, data, nonce, difficulty } = chain[i];
             const prevBlockHash = chain[i - 1].hash;
+            const lastDifficulty = chain[i - 1].difficulty;
             
             // duplica hash from block data of each block
             const duplicateHash = cryptoHash(timestamp, lastHash, data, nonce, difficulty)
@@ -32,6 +33,9 @@ class Blockchain {
 
             // each block has a valid hash based on all the fields
             if (hash !== duplicateHash) return false 
+
+            // prevents difficulty to jump by more than one
+            if (Math.abs(lastDifficulty - difficulty) > 1) return false;
         }
 
         return true
